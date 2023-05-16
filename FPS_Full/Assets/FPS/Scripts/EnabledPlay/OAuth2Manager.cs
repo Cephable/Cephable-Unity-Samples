@@ -23,42 +23,95 @@ public class OAuth2Manager : MonoBehaviour
     private string accessToken;
     private string refreshToken;
 
-    public void Authenticate()
+    public async void Authenticate()
     {
         REDIRECT_URI = string.Format("http://{0}:{1}/", IPAddress.Loopback, 51772);
         string authUrl = $"{AUTH_ENDPOINT}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code";
 
         Application.OpenURL(authUrl);
-    }
 
+        // Creates an HttpListener to listen for requests on that redirect URI.
+        var http = new HttpListener();
+        http.Prefixes.Add(REDIRECT_URI);
+        output("Listening..");
+        http.Start();
+
+      
+        // Waits for the OAuth authorization response.
+        var context = await http.GetContextAsync();
+
+
+        // Sends an HTTP response to the browser.
+        var response = context.Response;
+        string responseString = string.Format("<html><head><meta http-equiv='refresh' content='10;url=https://enabledplay.com'></head><body>Please return to the app.</body></html>");
+        var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
+        response.ContentLength64 = buffer.Length;
+        var responseOutput = response.OutputStream;
+        Task responseTask = responseOutput.WriteAsync(buffer, 0, buffer.Length).ContinueWith((task) =>
+        {
+            responseOutput.Close();
+            http.Stop();
+            Console.WriteLine("HTTP server stopped.");
+        });
+
+        // Checks for errors.
+        if (context.Request.QueryString.Get("error") != null)
+        {
+            output(String.Format("OAuth authorization error: {0}.", context.Request.QueryString.Get("error")));
+            return;
+        }
+        if (context.Request.QueryString.Get("code") == null)
+        {
+            output("Malformed authorization response. " + context.Request.QueryString);
+            return;
+        }
+
+        // extracts the code
+        var code = context.Request.QueryString.Get("code");
+        //var incoming_state = context.Request.QueryString.Get("state");
+
+        // Compares the receieved state to the expected value, to ensure that
+        // this app made the request which resulted in authorization.
+        // if (incoming_state != state)
+        // {
+        //     output(String.Format("Received request with invalid state ({0})", incoming_state));
+        //     return;
+        // }
+        output("Authorization code: " + code);
+
+        yield return GetAccessToken(code);
+
+    }
+    /// <summary>
+    /// Appends the given string to the on-screen log, and the debug console.
+    /// </summary>
+    /// <param name="output">string to be appended</param>
+    public void output(string output)
+    {
+        Console.WriteLine(output);
+        Debug.Log(output);
+    }
     public IEnumerator GetAccessToken(string authCode)
     {
         this.authCode = authCode;
 
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        formData.Add(new MultipartFormDataSection("grant_type", "authorization_code"));
-        formData.Add(new MultipartFormDataSection("code", authCode));
-        formData.Add(new MultipartFormDataSection("client_id", CLIENT_ID));
-        formData.Add(new MultipartFormDataSection("client_secret", CLIENT_SECRET));
-        formData.Add(new MultipartFormDataSection("redirect_uri", REDIRECT_URI));
-
-        UnityWebRequest www = UnityWebRequest.Post(TOKEN_ENDPOINT, formData);
+        UnityWebRequest www = UnityWebRequest.Post($"{TOKEN_ENDPOINT}?grant_type=code&code={authCode}&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}", string.Empty);
         yield return www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success)
         {
             string responseText = www.downloadHandler.text;
-
+            output(responseText);
             // Parse the response to extract the access token and refresh token
             // ...
             
-            // Store the tokens locally
-            PlayerPrefs.SetString("accessToken", accessToken);
-            PlayerPrefs.SetString("refreshToken", refreshToken);
+            // // Store the tokens locally
+            // PlayerPrefs.SetString("accessToken", accessToken);
+            // PlayerPrefs.SetString("refreshToken", refreshToken);
         }
         else
         {
-            Debug.Log($"Failed to get access token: {www.error}");
+            output($"Failed to get access token: {www.error}");
         }
     }
 
