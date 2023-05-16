@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LoginButton : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public OAuth2Manager oauth2Manager;
+    public Button loginButton;
+
+    private void Start()
     {
-        
+        loginButton.onClick.AddListener(OnLoginButtonClick);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnLoginButtonClick()
     {
-        
+        oauth2Manager.StartAuthorization();
     }
 }
