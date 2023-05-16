@@ -742,6 +742,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6c86c61f63a84b6799303613a3a7a21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AUTH_ENDPOINT: https://services.enabledplay.com/signin
+  TOKEN_ENDPOINT: https://services.enabledplay.com/signin/token
+  CLIENT_ID: 9c70d50a-3428-48dc-bc21-dc6807258aa4
+  CLIENT_SECRET: AmZiNDUxOGM1ZGFiNDhlNmE5MjY2ZjBiYzliNDUxMmQ1OGExZDAxZjU0ZWI0ODU5YmRhN2VkYTc0OTA1M2M4Nw==
 --- !u!114 &988515142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3791,6 +3795,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Id: b7ef103c-6e78-41af-8322-5ac95ed05882
+--- !u!114 &2729281214152228934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2729281214152228921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc9726b5ab7c042a2b48699a1e39c43f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2729281214182533258
 PrefabInstance:
   m_ObjectHideFlags: 0

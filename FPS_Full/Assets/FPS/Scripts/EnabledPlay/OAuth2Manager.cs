@@ -1,5 +1,13 @@
 using UnityEngine;
 using UnityEngine.Networking;
+using System;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Security.Cryptography;
+using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,7 +17,7 @@ public class OAuth2Manager : MonoBehaviour
     public string TOKEN_ENDPOINT = "https://services.enabledplay.com/signin/token";
     public string CLIENT_ID = "YOUR_CLIENT_ID";
     public string CLIENT_SECRET = "YOUR_CLIENT_SECRET";
-    public string REDIRECT_URI = "YOUR_REDIRECT_URI";
+    private string REDIRECT_URI = "YOUR_REDIRECT_URI";
 
     private string authCode;
     private string accessToken;
@@ -17,6 +25,7 @@ public class OAuth2Manager : MonoBehaviour
 
     public void Authenticate()
     {
+        REDIRECT_URI = string.Format("http://{0}:{1}/", IPAddress.Loopback, 51772);
         string authUrl = $"{AUTH_ENDPOINT}?client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&response_type=code";
 
         Application.OpenURL(authUrl);
