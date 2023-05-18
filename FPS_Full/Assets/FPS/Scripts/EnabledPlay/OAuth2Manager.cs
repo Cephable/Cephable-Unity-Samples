@@ -23,7 +23,7 @@ public class OAuth2Manager : MonoBehaviour
     private string accessToken;
     private string refreshToken;
 
-    private void Awake()
+    private void Start()
     {
         // check if we have an access token stored locally
         accessToken = PlayerPrefs.GetString("accessToken");
@@ -131,13 +131,8 @@ public class OAuth2Manager : MonoBehaviour
     {
         string refreshToken = PlayerPrefs.GetString("refreshToken");
 
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        formData.Add(new MultipartFormDataSection("grant_type", "refresh_token"));
-        formData.Add(new MultipartFormDataSection("refresh_token", refreshToken));
-        formData.Add(new MultipartFormDataSection("client_id", CLIENT_ID));
-        formData.Add(new MultipartFormDataSection("client_secret", CLIENT_SECRET));
+        UnityWebRequest www = UnityWebRequest.Post($"{TOKEN_ENDPOINT}?grant_type=refresh_token&refresh_token={refreshToken}&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}", string.Empty);
 
-        UnityWebRequest www = UnityWebRequest.Post(TOKEN_ENDPOINT, formData);
         yield return www.SendWebRequest();
 
         if (www.result == UnityWebRequest.Result.Success)
@@ -154,7 +149,7 @@ public class OAuth2Manager : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Failed to refresh access token: {www.error}");
+            output($"Failed to refresh access token: {www.error}");
         }
     }
 
