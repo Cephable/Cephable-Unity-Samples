@@ -23,6 +23,17 @@ public class OAuth2Manager : MonoBehaviour
     private string accessToken;
     private string refreshToken;
 
+    private void Awake()
+    {
+        // check if we have an access token stored locally
+        accessToken = PlayerPrefs.GetString("accessToken");
+        if (!string.IsNullOrEmpty(accessToken))
+        {
+            // if do go refresh the token
+            StartCoroutine(RefreshAccessToken());
+        }
+    }
+
     public async void Authenticate()
     {
         REDIRECT_URI = string.Format("http://{0}:{1}/", IPAddress.Loopback, 51772);
@@ -79,7 +90,7 @@ public class OAuth2Manager : MonoBehaviour
         // }
         output("Authorization code: " + code);
 
-        yield return GetAccessToken(code);
+        StartCoroutine(GetAccessToken(code));
 
     }
     /// <summary>
@@ -93,6 +104,7 @@ public class OAuth2Manager : MonoBehaviour
     }
     public IEnumerator GetAccessToken(string authCode)
     {
+        output("Getting access token...");
         this.authCode = authCode;
 
         UnityWebRequest www = UnityWebRequest.Post($"{TOKEN_ENDPOINT}?grant_type=code&code={authCode}&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}", string.Empty);
@@ -104,10 +116,10 @@ public class OAuth2Manager : MonoBehaviour
             output(responseText);
             // Parse the response to extract the access token and refresh token
             // ...
-            
+            var tokenResponse = TokenResponse.CreateFromJSON(responseText);
             // // Store the tokens locally
-            // PlayerPrefs.SetString("accessToken", accessToken);
-            // PlayerPrefs.SetString("refreshToken", refreshToken);
+            PlayerPrefs.SetString("accessToken", tokenResponse.access_token);
+            PlayerPrefs.SetString("refreshToken", tokenResponse.refresh_token);
         }
         else
         {
@@ -134,10 +146,11 @@ public class OAuth2Manager : MonoBehaviour
 
             // Parse the response to extract the new access token and refresh token
             // ...
+            var tokenResponse = TokenResponse.CreateFromJSON(responseText);
+            // // Store the tokens locally
+            PlayerPrefs.SetString("accessToken", tokenResponse.access_token);
+            PlayerPrefs.SetString("refreshToken", tokenResponse.refresh_token);
 
-            // Store the tokens locally
-            PlayerPrefs.SetString("accessToken", accessToken);
-            PlayerPrefs.SetString("refreshToken", refreshToken);
         }
         else
         {
@@ -152,5 +165,28 @@ public class OAuth2Manager : MonoBehaviour
     public void StartAuthorization()
     {
         Authenticate();
+    }
+
+    public void Signout()
+    {
+        // delete access and refresh token and reset local state
+        PlayerPrefs.DeleteKey("accessToken");
+        PlayerPrefs.DeleteKey("refreshToken");
+        accessToken = null;
+        refreshToken = null;
+    }
+}
+
+[System.Serializable]
+public class TokenResponse
+{
+    public string access_token;
+    public string refresh_token;
+    public string access_token_expiration;
+    public string refresh_token_expiration;
+
+    public static TokenResponse CreateFromJSON(string jsonString)
+    {
+        return JsonUtility.FromJson<TokenResponse>(jsonString);
     }
 }
