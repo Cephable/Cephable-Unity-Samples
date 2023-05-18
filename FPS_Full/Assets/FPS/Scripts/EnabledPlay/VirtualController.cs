@@ -73,7 +73,7 @@ public class VirtualController : MonoBehaviour
             output("No access token found, please sign in");
             yield break;
         }
-        var www = new UnityWebRequest($"https://services.enabledplay.com/api/Device/userDevices/new/{DeviceTypeId}?name={DefaultDeviceName}", "POST");
+        var www = UnityWebRequest.Post($"https://services.enabledplay.com/api/Device/userDevices/new/{DeviceTypeId}?name={DefaultDeviceName}",  string.Empty);
         // set the Authorization header
         www.SetRequestHeader("Authorization", $"Bearer {accessToken}");
         yield return www.SendWebRequest();
@@ -105,7 +105,7 @@ public class VirtualController : MonoBehaviour
             yield break;
         }
 
-        var www = new UnityWebRequest($"https://services.enabledplay.com/api/Device/userDevices/{userDeviceId}/tokens", "POST");
+        var www = UnityWebRequest.Post($"https://services.enabledplay.com/api/Device/userDevices/{userDeviceId}/tokens",  string.Empty);
         www.SetRequestHeader("Authorization", $"Bearer {accessToken}");
         yield return www.SendWebRequest();
 
