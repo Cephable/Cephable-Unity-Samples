@@ -746,6 +746,7 @@ MonoBehaviour:
   TOKEN_ENDPOINT: https://services.enabledplay.com/signin/token
   CLIENT_ID: 9c70d50a-3428-48dc-bc21-dc6807258aa4
   CLIENT_SECRET: AmZiNDUxOGM1ZGFiNDhlNmE5MjY2ZjBiYzliNDUxMmQ1OGExZDAxZjU0ZWI0ODU5YmRhN2VkYTc0OTA1M2M4Nw==
+  controller: {fileID: 2729281214152228923}
 --- !u!114 &988515142
 MonoBehaviour:
   m_ObjectHideFlags: 0

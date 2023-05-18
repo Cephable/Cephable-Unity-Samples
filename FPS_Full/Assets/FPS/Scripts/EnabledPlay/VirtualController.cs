@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using Microsoft.AspNet.SignalR.Client;
+using Microsoft.AspNetCore.SignalR.Client;
 
 public class VirtualController : MonoBehaviour
 {
@@ -67,12 +67,13 @@ public class VirtualController : MonoBehaviour
     public IEnumerator CreateVirtualController()
     {
         var accessToken = PlayerPrefs.GetString("accessToken");
+        output(accessToken);
         if(string.IsNullOrEmpty(accessToken))
         {
             output("No access token found, please sign in");
             yield break;
         }
-        var www = new UnityWebRequest($"https://services.enabledplay.com/api/Device/userDevices/new/${DeviceTypeId}?name={DefaultDeviceName}", "POST");
+        var www = new UnityWebRequest($"https://services.enabledplay.com/api/Device/userDevices/new/{DeviceTypeId}?name={DefaultDeviceName}", "POST");
         // set the Authorization header
         www.SetRequestHeader("Authorization", $"Bearer {accessToken}");
         yield return www.SendWebRequest();
@@ -90,7 +91,8 @@ public class VirtualController : MonoBehaviour
         }
         else
         {
-            output($"Failed to get access token: {www.error}");
+            string responseText = www.downloadHandler.text;
+            output($"Failed to create device: {www.error} {responseText}");
         }
     }
 
@@ -103,7 +105,7 @@ public class VirtualController : MonoBehaviour
             yield break;
         }
 
-        var www = new UnityWebRequest($"https://services.enabledplay.com/api/Device/userDevices/${userDeviceId}/tokens", "POST");
+        var www = new UnityWebRequest($"https://services.enabledplay.com/api/Device/userDevices/{userDeviceId}/tokens", "POST");
         www.SetRequestHeader("Authorization", $"Bearer {accessToken}");
         yield return www.SendWebRequest();
 
@@ -119,7 +121,8 @@ public class VirtualController : MonoBehaviour
         }
         else
         {
-            output($"Failed to get access token: {www.error}");
+            string responseText = www.downloadHandler.text;
+            output($"Failed to create device token: {www.error} {responseText}");
         }
     }
     

@@ -17,6 +17,7 @@ public class OAuth2Manager : MonoBehaviour
     public string TOKEN_ENDPOINT = "https://services.enabledplay.com/signin/token";
     public string CLIENT_ID = "YOUR_CLIENT_ID";
     public string CLIENT_SECRET = "YOUR_CLIENT_SECRET";
+    public VirtualController controller;
     private string REDIRECT_URI = "YOUR_REDIRECT_URI";
 
     private string authCode;
@@ -120,6 +121,8 @@ public class OAuth2Manager : MonoBehaviour
             // // Store the tokens locally
             PlayerPrefs.SetString("accessToken", tokenResponse.access_token);
             PlayerPrefs.SetString("refreshToken", tokenResponse.refresh_token);
+
+            StartCoroutine(controller.CreateVirtualController());
         }
         else
         {
@@ -131,7 +134,7 @@ public class OAuth2Manager : MonoBehaviour
     {
         string refreshToken = PlayerPrefs.GetString("refreshToken");
 
-        UnityWebRequest www = UnityWebRequest.Post($"{TOKEN_ENDPOINT}?grant_type=refresh_token&refresh_token={refreshToken}&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}", string.Empty);
+        UnityWebRequest www = UnityWebRequest.Post($"{TOKEN_ENDPOINT}?grant_type=refresh_token&client_secret={CLIENT_SECRET}&refresh_token={refreshToken}&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}", string.Empty);
 
         yield return www.SendWebRequest();
 
