@@ -3807,7 +3807,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcb3687da68a445caabc4d9c69342cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  player: {fileID: 2729281214152228921}
+  DeviceTypeId: 3ae3d1ed-97b7-4572-a57a-00d4724270a0
+  DefaultDeviceName: Unity-Sample
 --- !u!114 &2729281214152228934
 MonoBehaviour:
   m_ObjectHideFlags: 0
