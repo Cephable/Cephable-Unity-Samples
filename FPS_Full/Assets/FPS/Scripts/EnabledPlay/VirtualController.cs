@@ -22,14 +22,15 @@ public class VirtualController : MonoBehaviour
     private HubConnection hubConnection;
 
     // Start is called before the first frame update
-    void Start()
+    public async Task Start()
     {
         userDeviceId = PlayerPrefs.GetString("userDeviceId");
         userDeviceToken = PlayerPrefs.GetString("userDeviceToken");
 
         if(!string.IsNullOrEmpty(userDeviceId) && !string.IsNullOrEmpty(userDeviceToken))
         {
-            ConnectToHub();
+            output($"User device id: {userDeviceId} with token: {userDeviceToken}");
+            await ConnectToHub();
         }
         else
         {
@@ -43,24 +44,37 @@ public class VirtualController : MonoBehaviour
         
     }
 
-    public async void ConnectToHub()
+    public async Task ConnectToHub()
     {
-        var connection = new HubConnectionBuilder()
+        try
+        {
+            var connection = new HubConnectionBuilder()
             .WithUrl("https://services.enabledplay.com/device", options =>
             {
                 options.AccessTokenProvider = () => Task.FromResult(userDeviceToken);
                 options.Headers.Add("X-Device-Token", userDeviceToken);
+                options.Headers.Add("User-Agent", "Unity-Sample");
             })
             .Build();
 
-        connection.On<string>("DeviceCommand", (command) =>
-        {
-            output("Received command: " + command);
-        });
+            connection.On<string>("DeviceCommand", (command) =>
+            {
+                output("Received command: " + command);
+            });
+            output("Connecting to hub");
 
-        await connection.StartAsync();
-        // Connection started, indicate to hub that we are listening
-        await connection.InvokeAsync("VerifySelf");
+            await connection.StartAsync();
+            // Connection started, indicate to hub that we are listening
+            await connection.InvokeAsync("VerifySelf");
+            output("Connected to hub");
+        } 
+        catch(Exception ex)
+        {
+            
+            output(ex.Message);
+            output(ex.StackTrace);
+        }
+      
 
     }
 
