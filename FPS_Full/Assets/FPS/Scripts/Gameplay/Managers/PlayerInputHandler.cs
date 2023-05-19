@@ -22,8 +22,9 @@ namespace Unity.FPS.Gameplay
 
         GameFlowManager m_GameFlowManager;
         PlayerCharacterController m_PlayerCharacterController;
-        bool m_FireInputWasHeld;
-
+        public bool m_FireInputWasHeld;
+        public bool isJumping = false;
+        public bool isShooting = false;
         void Start()
         {
             m_PlayerCharacterController = GetComponent<PlayerCharacterController>();
@@ -78,7 +79,7 @@ namespace Unity.FPS.Gameplay
         {
             if (CanProcessInput())
             {
-                return Input.GetButtonDown(GameConstants.k_ButtonNameJump);
+                return isJumping || Input.GetButtonDown(GameConstants.k_ButtonNameJump);
             }
 
             return false;
@@ -96,7 +97,7 @@ namespace Unity.FPS.Gameplay
 
         public bool GetFireInputDown()
         {
-            return GetFireInputHeld() && !m_FireInputWasHeld;
+            return isShooting || (GetFireInputHeld() && !m_FireInputWasHeld);
         }
 
         public bool GetFireInputReleased()
@@ -119,7 +120,7 @@ namespace Unity.FPS.Gameplay
                 }
             }
 
-            return false;
+            return isShooting;
         }
 
         public bool GetAimInputHeld()
