@@ -19,6 +19,7 @@ public class VirtualController : MonoBehaviour
     public string DefaultDeviceName = "Unity-Sample";
     private string userDeviceId;
     private string userDeviceToken;
+    private DeviceProfileConfiguration currentProfile;
     private HubConnection hubConnection;
 
     // Start is called before the first frame update
@@ -59,7 +60,20 @@ public class VirtualController : MonoBehaviour
 
             connection.On<string>("DeviceCommand", (command) =>
             {
+                // TODO: simulate based on profile
                 output("Received command: " + command);
+
+                // temp
+                if (command == "jump")
+                {
+                    // Simulate a space bar press to make the player character jump
+                    // custom logic to make jump
+                }
+            });
+            connection.On<UserDevice>("DeviceProfileUpdate", (device) =>
+            {
+                output("Received profile update: " + device);
+                currentProfile = device.currentProfile?.configuration;
             });
             output("Connecting to hub");
 
@@ -157,10 +171,84 @@ public class UserDevice
     public bool isListening;
     public bool isAutoListen;
     public bool isOptimisticModel;
+    public UserDeviceProfile currentProfile;
     public static UserDevice CreateFromJSON(string jsonString)
     {
         return JsonUtility.FromJson<UserDevice>(jsonString);
     }
+}
+
+[System.Serializable]
+public class UserDeviceProfile 
+{
+    public string id;
+    public string name;
+    public string  userId;
+    public string  profileType;
+    public DeviceProfileConfiguration configuration;
+    public string  createdDate;
+    public string  modifiedDate;
+}
+
+
+
+[System.Serializable]
+public class DeviceProfileConfiguration
+{
+    public string profileType;
+    public List<KeyCommandMapping> commandKeyMappings;
+    public List<MacroModel> macros;
+    public List<HotkeyModel> hotkeys;
+    public List<string> dictationCommands;
+    public List<AudioEventModel> audioEvents;
+}
+
+[System.Serializable]
+public class KeyCommandMapping
+{
+    public string key;
+    public List<string> commands;
+}
+
+[System.Serializable]
+public class MacroModel
+{
+    public string name;
+    public List<string> commands;
+    public List<MacroEvent> events;
+}
+
+[System.Serializable]
+public class MacroEvent
+{
+    public string eventType;
+    public List<string> keys;
+    public int? holdTimeMilliseconds;
+    public string typedPhrase;
+    public int? mouseMoveX;
+    public int? mouseMoveY;
+    public int? mouseMoveZ;
+    public int? joystickLeftMoveX;
+    public int? joystickLeftMoveY;
+    public int? joystickRightMoveX;
+    public int? joystickRightMoveY;
+    public string outputSpeech;
+}
+
+[System.Serializable]
+public class HotkeyModel
+{
+    public string displayName;
+    public string command;
+}
+
+[System.Serializable]
+public class AudioEventModel
+{
+    public string name;
+    public List<string> commands;
+    public string audioFileUrl;
+    public string outputSpeech;
 }
 
 [System.Serializable]
