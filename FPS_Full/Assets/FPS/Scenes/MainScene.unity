@@ -3808,9 +3808,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcb3687da68a445caabc4d9c69342cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 2729281214152228921}
+  inputHandler: {fileID: 2729281214152228932}
   DeviceTypeId: 3ae3d1ed-97b7-4572-a57a-00d4724270a0
   DefaultDeviceName: Unity-Sample
+--- !u!114 &2729281214152228932 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6145509692674227223, guid: 761cdc9e4e883334cbdcea062d0befa7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2729281214152228920}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2729281214152228921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dac5ddb3ce9b8884ca9588dc620ffcab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2729281214152228934
 MonoBehaviour:
   m_ObjectHideFlags: 0

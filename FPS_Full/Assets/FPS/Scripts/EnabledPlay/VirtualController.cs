@@ -11,10 +11,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using Microsoft.AspNetCore.SignalR.Client;
+using Unity.FPS.Gameplay;
 
 public class VirtualController : MonoBehaviour
 {
-    public GameObject player;
+    public PlayerInputHandler inputHandler;
     public string DeviceTypeId;
     public string DefaultDeviceName = "Unity-Sample";
     private string userDeviceId;
@@ -66,9 +67,17 @@ public class VirtualController : MonoBehaviour
                 // temp
                 if (command == "jump")
                 {
-                    // Simulate a space bar press to make the player character jump
-                    // custom logic to make jump
+                    inputHandler.isJumping = true;
                 }
+                if(command == "fire")
+                {
+                    inputHandler.isShooting = true;
+                }
+                if(command == "turn right")
+                {
+                    // TODO: spin some percentage to the right
+                }
+                StartCoroutine(ResetKeys());
             });
             connection.On<UserDevice>("DeviceProfileUpdate", (device) =>
             {
@@ -90,6 +99,13 @@ public class VirtualController : MonoBehaviour
         }
       
 
+    }
+
+    public IEnumerator ResetKeys()
+    {
+        yield return new WaitForSeconds(0.1f);
+        inputHandler.isJumping = false;
+        inputHandler.isShooting = false;
     }
 
     public IEnumerator CreateVirtualController()
