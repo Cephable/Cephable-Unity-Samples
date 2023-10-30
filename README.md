@@ -1,2 +1,2 @@
-# EnabledPlay-Unity-Samples
-Sample projects for integrating EnabledPlay with Unity
+# Cephable-Unity-Samples
+Sample projects for integrating Cephable with Unity
