@@ -5,8 +5,8 @@ using System.Collections.Generic;
 
 public class OAuth2Manager : MonoBehaviour
 {
-    private const string AUTH_ENDPOINT = "https://services.enabledplay.com/signin";
-    private const string TOKEN_ENDPOINT = "https://services.enabledplay.com/signin/token";
+    private const string AUTH_ENDPOINT = "https://services.cephable.com/signin";
+    private const string TOKEN_ENDPOINT = "https://services.cephable.com/signin/token";
     private const string CLIENT_ID = "YOUR_CLIENT_ID";
     private const string CLIENT_SECRET = "YOUR_CLIENT_SECRET";
     private const string REDIRECT_URI = "YOUR_REDIRECT_URI";
@@ -42,7 +42,7 @@ public class OAuth2Manager : MonoBehaviour
 
             // Parse the response to extract the access token and refresh token
             // ...
-            
+
             // Store the tokens locally
             PlayerPrefs.SetString("accessToken", accessToken);
             PlayerPrefs.SetString("refreshToken", refreshToken);

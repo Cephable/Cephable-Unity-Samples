@@ -48,14 +48,14 @@ public class OAuth2Manager : MonoBehaviour
         output("Listening..");
         http.Start();
 
-      
+
         // Waits for the OAuth authorization response.
         var context = await http.GetContextAsync();
 
 
         // Sends an HTTP response to the browser.
         var response = context.Response;
-        string responseString = string.Format("<html><head><meta http-equiv='refresh' content='10;url=https://enabledplay.com'></head><body>Please return to the app.</body></html>");
+        string responseString = string.Format("<html><head><meta http-equiv='refresh' content='10;url=https://cephable.com'></head><body>Please return to the app.</body></html>");
         var buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
         response.ContentLength64 = buffer.Length;
         var responseOutput = response.OutputStream;

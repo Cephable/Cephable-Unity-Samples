@@ -31,10 +31,10 @@ public class LoginButton : MonoBehaviour
         if (!string.IsNullOrEmpty(accessToken))
         {
             oauth2Manager.Signout();
-            loginButton.GetComponentInChildren<Text>().text = "Sign In";
+            //loginButton.GetComponentInChildren<Text>().text = "Sign In";
             return;
         }
-        else 
+        else
         {
             oauth2Manager.StartAuthorization();
         }

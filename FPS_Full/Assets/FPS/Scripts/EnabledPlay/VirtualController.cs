@@ -29,7 +29,7 @@ public class VirtualController : MonoBehaviour
         userDeviceId = PlayerPrefs.GetString("userDeviceId");
         userDeviceToken = PlayerPrefs.GetString("userDeviceToken");
 
-        if(!string.IsNullOrEmpty(userDeviceId) && !string.IsNullOrEmpty(userDeviceToken))
+        if (!string.IsNullOrEmpty(userDeviceId) && !string.IsNullOrEmpty(userDeviceToken))
         {
             output($"User device id: {userDeviceId} with token: {userDeviceToken}");
             await ConnectToHub();
@@ -43,7 +43,7 @@ public class VirtualController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public async Task ConnectToHub()
@@ -51,7 +51,7 @@ public class VirtualController : MonoBehaviour
         try
         {
             var connection = new HubConnectionBuilder()
-            .WithUrl("https://services.enabledplay.com/device", options =>
+            .WithUrl("https://services.cephable.com/device", options =>
             {
                 options.AccessTokenProvider = () => Task.FromResult(userDeviceToken);
                 options.Headers.Add("X-Device-Token", userDeviceToken);
@@ -69,11 +69,11 @@ public class VirtualController : MonoBehaviour
                 {
                     inputHandler.isJumping = true;
                 }
-                if(command == "fire")
+                if (command == "fire")
                 {
                     inputHandler.isShooting = true;
                 }
-                if(command == "turn right")
+                if (command == "turn right")
                 {
                     // TODO: spin some percentage to the right
                 }
@@ -90,14 +90,14 @@ public class VirtualController : MonoBehaviour
             // Connection started, indicate to hub that we are listening
             await connection.InvokeAsync("VerifySelf");
             output("Connected to hub");
-        } 
-        catch(Exception ex)
+        }
+        catch (Exception ex)
         {
-            
+
             output(ex.Message);
             output(ex.StackTrace);
         }
-      
+
 
     }
 
@@ -112,12 +112,12 @@ public class VirtualController : MonoBehaviour
     {
         var accessToken = PlayerPrefs.GetString("accessToken");
         output(accessToken);
-        if(string.IsNullOrEmpty(accessToken))
+        if (string.IsNullOrEmpty(accessToken))
         {
             output("No access token found, please sign in");
             yield break;
         }
-        var www = UnityWebRequest.Post($"https://services.enabledplay.com/api/Device/userDevices/new/{DeviceTypeId}?name={DefaultDeviceName}",  string.Empty);
+        var www = UnityWebRequest.Post($"https://services.cephable.com/api/Device/userDevices/new/{DeviceTypeId}?name={DefaultDeviceName}", string.Empty);
         // set the Authorization header
         www.SetRequestHeader("Authorization", $"Bearer {accessToken}");
         yield return www.SendWebRequest();
@@ -128,7 +128,7 @@ public class VirtualController : MonoBehaviour
             // Parse the response to extract the access token and refresh token
             // ...
             var deviceResponse = UserDevice.CreateFromJSON(responseText);
-  
+
             PlayerPrefs.SetString("userDeviceId", deviceResponse.id);
             userDeviceId = deviceResponse.id;
             StartCoroutine(CreateDeviceToken());
@@ -143,13 +143,13 @@ public class VirtualController : MonoBehaviour
     public IEnumerator CreateDeviceToken()
     {
         var accessToken = PlayerPrefs.GetString("accessToken");
-        if(string.IsNullOrEmpty(accessToken))
+        if (string.IsNullOrEmpty(accessToken))
         {
             output("No access token found, please sign in");
             yield break;
         }
 
-        var www = UnityWebRequest.Post($"https://services.enabledplay.com/api/Device/userDevices/{userDeviceId}/tokens",  string.Empty);
+        var www = UnityWebRequest.Post($"https://services.cephable.com/api/Device/userDevices/{userDeviceId}/tokens", string.Empty);
         www.SetRequestHeader("Authorization", $"Bearer {accessToken}");
         yield return www.SendWebRequest();
 
@@ -169,7 +169,7 @@ public class VirtualController : MonoBehaviour
             output($"Failed to create device token: {www.error} {responseText}");
         }
     }
-    
+
     public void output(string output)
     {
         Console.WriteLine(output);
@@ -195,15 +195,15 @@ public class UserDevice
 }
 
 [System.Serializable]
-public class UserDeviceProfile 
+public class UserDeviceProfile
 {
     public string id;
     public string name;
-    public string  userId;
-    public string  profileType;
+    public string userId;
+    public string profileType;
     public DeviceProfileConfiguration configuration;
-    public string  createdDate;
-    public string  modifiedDate;
+    public string createdDate;
+    public string modifiedDate;
 }
 
 
