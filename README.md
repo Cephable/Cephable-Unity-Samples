@@ -8,6 +8,8 @@ Sample projects for integrating Cephable with Unity. This allows users of Cephab
 - Virtual buttons
 - more!
 
+See it in action here: https://youtu.be/cwKVbYTWMt8
+
 # Overview and Getting Started
 
 To use this demo on your own, you'll need a licensed setup of Cephable controls to receive a:
