@@ -65,17 +65,13 @@ public class VirtualController : MonoBehaviour
                 output("Received command: " + command);
 
                 // temp
-                if (command == "jump")
+                if (command == "jump" || command == "hotkey_jump" || command == "eyebrows_raised")
                 {
                     inputHandler.isJumping = true;
                 }
                 if (command == "fire")
                 {
                     inputHandler.isShooting = true;
-                }
-                if (command == "turn right")
-                {
-                    // TODO: spin some percentage to the right
                 }
                 StartCoroutine(ResetKeys());
             });

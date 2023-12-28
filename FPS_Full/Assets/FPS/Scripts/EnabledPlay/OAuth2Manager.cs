@@ -13,8 +13,8 @@ using System.Collections.Generic;
 
 public class OAuth2Manager : MonoBehaviour
 {
-    public string AUTH_ENDPOINT = "https://services.enabledplay.com/signin";
-    public string TOKEN_ENDPOINT = "https://services.enabledplay.com/signin/token";
+    public string AUTH_ENDPOINT = "https://services.cephable.com/signin";
+    public string TOKEN_ENDPOINT = "https://services.cephable.com/signin/token";
     public string CLIENT_ID = "YOUR_CLIENT_ID";
     public string CLIENT_SECRET = "YOUR_CLIENT_SECRET";
     public VirtualController controller;
