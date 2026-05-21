@@ -2,6 +2,8 @@
 
 View the new and official [Cephable Unity Plugin](https://github.com/Cephable/Cephable-Unity-Plugin) to get started! 
 
+---
+
 Sample projects for integrating Cephable with Unity. This allows users of Cephable's adaptive and accessibility control to play your games and apps in ways that work best for them with things like:
 
 - Adaptive voice controls
